@@ -1,4 +1,30 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
+
 const Signup = () => {
+    const navigate = useNavigate();
+
+    const [formData, setFormData] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: ''
+    });
+
+    const onTextChange = e => {
+        const copy = { ...formData };
+        copy[e.target.name] = e.target.value;
+        setFormData(copy);
+    }
+
+    const onFormSubmit = async e => {
+        e.preventDefault();
+        await axios.post('/api/user/signup', formData);
+        navigate('/login');
+    }
+
     return (
         <>
             <div id="root">
@@ -47,13 +73,14 @@ const Signup = () => {
                         >
                             <div className="col-md-6 offset-md-3 bg-light p-4 rounded shadow">
                                 <h3>Sign up for a new account</h3>
-                                <form>
+                                <form onSubmit={onFormSubmit}>
                                     <input
                                         type="text"
                                         name="firstName"
                                         placeholder="First Name"
                                         className="form-control"
-                                        defaultValue=""
+                                        value={formData.firstName}
+                                        onChange={onTextChange}
                                     />
                                     <br />
                                     <input
@@ -61,7 +88,8 @@ const Signup = () => {
                                         name="lastName"
                                         placeholder="Last Name"
                                         className="form-control"
-                                        defaultValue=""
+                                        value={formData.lastName}
+                                        onChange={onTextChange}
                                     />
                                     <br />
                                     <input
@@ -69,7 +97,8 @@ const Signup = () => {
                                         name="email"
                                         placeholder="Email"
                                         className="form-control"
-                                        defaultValue=""
+                                        value={formData.email}
+                                        onChange={onTextChange}
                                     />
                                     <br />
                                     <input
@@ -77,7 +106,8 @@ const Signup = () => {
                                         name="password"
                                         placeholder="Password"
                                         className="form-control"
-                                        defaultValue=""
+                                        value={formData.password}
+                                        onChange={onTextChange}
                                     />
                                     <br />
                                     <button className="btn btn-primary">Signup</button>

@@ -1,4 +1,33 @@
+import React, { useState } from 'react';
+import {useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useAuthDataContext } from '../AuthContext';
+
 const Login = () => {
+
+    const [formData, setFormData] = useState({ email: '', password: '' });
+    const [isValidLogin, setIsValidLogin] = useState(true);
+    const { setUser } = useAuthDataContext();
+    const navigate = useNavigate();
+
+    const onTextChange = e => {
+        const copy = { ...formData };
+        copy[e.target.name] = e.target.value;
+        setFormData(copy);
+    }
+
+    const onFormSubmit = async e => {
+        e.preventDefault();
+        const { data } = await axios.post('/api/user/login', formData);
+        const isValidLogin = !!data;
+        setIsValidLogin(isValidLogin);
+        if (isValidLogin) {
+            setUser(data);
+            navigate('/');
+        }
+    }
+
+
     return (
         <>
             <div id="root">
@@ -47,13 +76,14 @@ const Login = () => {
                         >
                             <div className="col-md-6 offset-md-3 bg-light p-4 rounded shadow">
                                 <h3>Log in to your account</h3>
-                                <form>
+                                <form onSubmit={onFormSubmit}>
                                     <input
                                         type="text"
                                         name="email"
                                         placeholder="Email"
                                         className="form-control"
-                                        defaultValue=""
+                                        value={formData.email}
+                                        onChange={onTextChange}
                                     />
                                     <br />
                                     <input
@@ -61,7 +91,8 @@ const Login = () => {
                                         name="password"
                                         placeholder="Password"
                                         className="form-control"
-                                        defaultValue=""
+                                        value={formData.password}
+                                        onChange={onTextChange}
                                     />
                                     <br />
                                     <button className="btn btn-primary">Login</button>

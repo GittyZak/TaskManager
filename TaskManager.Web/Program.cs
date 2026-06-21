@@ -1,10 +1,30 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+
 namespace TaskManager.Web;
 
 public class Program
 {
+    private static string CookieScheme = "Bookmarks";
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+
+        builder.Services.AddAuthentication(CookieScheme)
+            .AddCookie(CookieScheme, options =>
+            {
+                options.Events = new CookieAuthenticationEvents
+                {
+                    OnRedirectToLogin = context =>
+                    {
+                        context.Response.StatusCode = 403;
+                        context.Response.ContentType = "application/json";
+                        var result = System.Text.Json.JsonSerializer.Serialize(new { error = "You are not authenticated" });
+                        return context.Response.WriteAsync(result);
+                    }
+                };
+            });
+
+        builder.Services.AddSession();
 
         builder.Services.AddControllersWithViews();
 
@@ -15,7 +35,7 @@ public class Program
             app.UseHsts();
         }
 
-        //app.UseHttpsRedirection();
+        app.UseHttpsRedirection();
         app.UseStaticFiles();
         if (app.Environment.IsDevelopment())
         {
@@ -37,6 +57,10 @@ public class Program
             });
         }
         app.UseRouting();
+
+        app.UseSession();
+        app.UseAuthentication();
+        app.UseAuthorization();
 
 
         app.MapControllerRoute(
