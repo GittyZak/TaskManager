@@ -31,7 +31,17 @@ namespace TaskManager.Web.Controllers
             }
 
             var repo = new UserRepository(_connectionString);
-            return repo.GetByEmail(User.Identity.Name);
+            var user= repo.GetByEmail(User.Identity.Name);
+            if (user != null)
+            {
+                var userIdClaim = User.FindFirst("userId");
+                if (userIdClaim != null)
+                {
+                    user.Id = int.Parse(userIdClaim.Value);
+                }
+            }
+
+            return user;
         }
         [HttpPost("login")]
         public User Login(LoginViewModel vm)
@@ -45,7 +55,8 @@ namespace TaskManager.Web.Controllers
 
             var claims = new List<Claim>
             {
-                new Claim("user", vm.Email)
+                new Claim("user", vm.Email),
+                new Claim("userId", user.Id.ToString())
             };
             HttpContext.SignInAsync(new ClaimsPrincipal(
                 new ClaimsIdentity(claims, "Cookies", "user", "role"))).Wait();

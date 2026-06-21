@@ -29,7 +29,8 @@ const Home = () => {
     }
 
     const OnAddClick = async () => {
-        await axios.post('/api/jobs/add', { title: title, userId: user.Id })
+        
+        await axios.post('/api/jobs/add', { title: title, userId: user.id })
     }
 
     return (
