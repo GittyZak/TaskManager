@@ -51,5 +51,10 @@ namespace TaskManager.Web.Controllers
                 new ClaimsIdentity(claims, "Cookies", "user", "role"))).Wait();
             return user;
         }
+        [HttpGet("logout")]
+        public void Logout()
+        {
+            HttpContext.SignOutAsync().Wait();
+        }
     }
 }

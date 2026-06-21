@@ -5,17 +5,22 @@ import Home from './Pages/Home';
 import Login from './Pages/Login';
 import Signup from './Pages/Signup';
 import Logout from './Pages/Logout';
+import AuthContextComponent from './AuthContext';
+import PrivateRoute from './PrivateRoute';
+
 const App = () => {
 
     return (
-        <Layout>
-            <Routes>
-                <Route path='/' element={<Home />} />
-                <Route path='/login' element={<Login />} />
-                <Route path='/signup' element={<Signup />} />
-                <Route path='/logout' element={<Logout />} />
-            </Routes>
-        </Layout>
+        <AuthContextComponent>
+            <Layout>
+                <Routes>
+                    <Route path='/' element={<PrivateRoute><Home /></PrivateRoute>} />
+                    <Route path='/login' element={<Login />} />
+                    <Route path='/signup' element={<Signup />} />
+                    <Route path='/logout' element={<Logout />} />
+                </Routes>
+            </Layout>
+        </AuthContextComponent>
     );
 }
 
