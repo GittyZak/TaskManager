@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useAuthDataContext } from '../AuthContext';
 
 const Home = () => {
 
     const [jobs, setJobs] = useState([]);
     const [title, setTitle] = useState('')
+    const { user } = useAuthDataContext();
 
     useEffect(() => {
         const GetJobs = async () => {
@@ -27,7 +29,7 @@ const Home = () => {
     }
 
     const OnAddClick = async () => {
-        await axios.post('/api/jobs/add', title)
+        await axios.post('/api/jobs/add', { title: title, userId: user.Id })
     }
 
     return (

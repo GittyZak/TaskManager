@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TaskManager.Data;
+using TaskManager.Web.ViewModels;
 
 namespace TaskManager.Web.Controllers
 {
@@ -20,10 +21,10 @@ namespace TaskManager.Web.Controllers
             return repo.GetAll();
         }
         [HttpPost("add")]
-        public void Add(string title)
+        public void Add(AddJobViewModel vm)
         {
             var repo = new JobRepository(_connectionString);
-            repo.Add(title);
+            repo.Add(vm.Title, vm.UserId);
         }
     }
 }

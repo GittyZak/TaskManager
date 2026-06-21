@@ -19,11 +19,11 @@ namespace TaskManager.Data
             using var context = new TaskManagerDataContext(_connectionString);
             return context.Jobs.ToList();
         }
-        public void Add(string title)
+        public void Add(string title, int userId)
         {
             Console.WriteLine(title);
             using var context = new TaskManagerDataContext(_connectionString);
-            context.Jobs.Add(new Job { Status = Status.Available, Title = title });
+            context.Jobs.Add(new Job { Status = Status.Available, Title = title, UserId = userId });
             context.SaveChanges();
         }
     }
