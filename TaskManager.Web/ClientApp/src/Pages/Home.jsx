@@ -29,7 +29,7 @@ const Home = () => {
     }
 
     const OnAddClick = async () => {
-        
+
         await axios.post('/api/jobs/add', { title: title, userId: user.id })
     }
 
@@ -93,10 +93,12 @@ const Home = () => {
                             </thead>
                             <tbody >
                                 {jobs.map(j => {
-                                    <tr>key={j.Id}
-                                        <td>{j.Title}</td>
-                                        <td>{GetButton(j.Status)}</td>
-                                    </tr>
+                                    return (
+                                        <tr key={j.Id}>
+                                            <td>{j.Title}</td>
+                                            <td>{GetButton(j.Status)}</td>
+                                        </tr>
+                                    );
                                 })}
                             </tbody>
                         </table>
